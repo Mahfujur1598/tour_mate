@@ -11,8 +11,6 @@ class AuthController extends GetxController {
   bool get isLoggedIn => _isLoggedIn.value;
 
   final user = Rxn<Map<String, dynamic>>();
-
-  // 🔹 Loading state
   final RxBool isLoading = false.obs;
 
   // 🔹 My Tours list
@@ -26,10 +24,12 @@ class AuthController extends GetxController {
 
   void _setUser(User? firebaseUser) async {
     if (firebaseUser == null) {
+      print("User logged out");
       _isLoggedIn.value = false;
       user.value = null;
       myTours.clear();
     } else {
+      print("User logged in: ${firebaseUser.uid}");
       _isLoggedIn.value = true;
       final doc = await _firestore.collection("users").doc(firebaseUser.uid).get();
       user.value = {
@@ -93,55 +93,81 @@ class AuthController extends GetxController {
       _isLoggedIn.value = false;
       user.value = null;
       myTours.clear();
-
       Get.offAllNamed(AppRoutes.login);
     } catch (e) {
       Get.snackbar("Error", "Logout failed: $e");
     }
   }
 
-  // 🔹 Load tours from Firestore
+  // 🔹 Load my tours from Firestore → bookings
   Future<void> loadMyTours() async {
-    if (_auth.currentUser == null) return;
+    print("Loading my tours...");
+    if (_auth.currentUser == null) {
+      print("No current user!");
+      return;
+    }
+
+    print("Current user ID: ${_auth.currentUser!.uid}");
 
     try {
       final snapshot = await _firestore
-          .collection("users")
-          .doc(_auth.currentUser!.uid)
-          .collection("tours")
-          .orderBy("createdAt", descending: true)
+          .collection("bookings")
+          .where("userId", isEqualTo: _auth.currentUser!.uid)
+      //.orderBy("timestamp", descending: true) // comment temporarily if timestamp missing
           .get();
 
+      print("Snapshot size: ${snapshot.docs.length}");
+
       myTours.value = snapshot.docs.map((doc) {
+        final data = doc.data();
+        print("Booking doc: $data");
         return {
           "id": doc.id,
-          "name": doc["name"] ?? "Unknown Tour",
-          "price": doc["price"] ?? 0,
+          "tourName": data["tourName"] ?? "Unknown Tour",
+          "price": data["price"] ?? 0,
+          "date": data["date"] ?? "",
+          "travelerName": data["travelerName"] ?? "",
+          "phone": data["phone"] ?? "",
+          "guests": data["guests"] ?? 1,
         };
       }).toList();
     } catch (e) {
-      Get.snackbar("Error", "Failed to load tours: $e");
+      print("Error loading my tours: $e");
+      Get.snackbar("Error", "Failed to load your bookings: $e");
     }
   }
 
   // 🔹 Book a tour
-  Future<void> bookTour(String name, int price) async {
-    if (_auth.currentUser == null) return;
+  Future<void> bookTour({
+    required String tourName,
+    required int price,
+    required String travelerName,
+    required String phone,
+    required String date,
+    required int guests,
+  }) async {
+    if (_auth.currentUser == null) {
+      print("Cannot book tour, user not logged in");
+      return;
+    }
 
     try {
-      await _firestore
-          .collection("users")
-          .doc(_auth.currentUser!.uid)
-          .collection("tours")
-          .add({
-        "name": name,
+      await _firestore.collection("bookings").add({
+        "userId": _auth.currentUser!.uid,
+        "tourName": tourName,
+        "travelerName": travelerName,
+        "phone": phone,
+        "date": date,
+        "guests": guests,
         "price": price,
-        "createdAt": FieldValue.serverTimestamp(),
+        "timestamp": FieldValue.serverTimestamp(),
       });
 
+      print("Booking added successfully");
       await loadMyTours();
       Get.snackbar("Success", "Tour booked successfully!");
     } catch (e) {
+      print("Error booking tour: $e");
       Get.snackbar("Error", "Failed to book tour: $e");
     }
   }

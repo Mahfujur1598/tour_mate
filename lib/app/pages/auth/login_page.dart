@@ -41,7 +41,7 @@ class LoginPage extends StatelessWidget {
                     "Login here",
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.redAccent,
+                      color: Colors.blue,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -62,7 +62,7 @@ class LoginPage extends StatelessWidget {
                       fillColor: Colors.grey[100],
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.redAccent),
+                        borderSide: const BorderSide(color: Colors.grey),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -89,7 +89,7 @@ class LoginPage extends StatelessWidget {
                       fillColor: Colors.grey[100],
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderSide: BorderSide(color: Colors.grey),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -131,7 +131,7 @@ class LoginPage extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
@@ -150,7 +150,7 @@ class LoginPage extends StatelessWidget {
                           height: 18, width: 18,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                            : const Text("Sign in", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            : const Text("Sign in", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                       ),
                     );
                   }),
@@ -161,6 +161,7 @@ class LoginPage extends StatelessWidget {
                     onTap: () => Get.toNamed(AppRoutes.signup),
                     child: const Text("Create new account", style: TextStyle(color: Colors.blue)),
                   ),
+
 
                   const SizedBox(height: 24),
                   Row(
@@ -179,12 +180,10 @@ class LoginPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _socialButton("assets/images/google.webp"),
-                      const SizedBox(width: 16),
-                      _socialButton("assets/images/facebook.webp"),
-                      const SizedBox(width: 16),
-                      _socialButton("assets/images/apple.jpg"),
                     ],
                   )
+
+
                 ],
               ),
             ),

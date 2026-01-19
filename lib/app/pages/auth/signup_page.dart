@@ -38,7 +38,7 @@ class SignupPage extends StatelessWidget {
                   "Create Account",
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
+                    color: Colors.blue,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -123,7 +123,7 @@ class SignupPage extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent,
+                      backgroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -145,7 +145,7 @@ class SignupPage extends StatelessWidget {
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 ),
@@ -161,7 +161,7 @@ class SignupPage extends StatelessWidget {
                       onPressed: () => Get.toNamed('/login'),
                       child: const Text(
                         "Login",
-                        style: TextStyle(color: Colors.redAccent),
+                        style: TextStyle(color: Colors.blue),
                       ),
                     ),
                   ],
@@ -188,10 +188,6 @@ class SignupPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _socialButton("assets/images/google.webp"),
-                    const SizedBox(width: 16),
-                    _socialButton("assets/images/facebook.webp"),
-                    const SizedBox(width: 16),
-                    _socialButton("assets/images/apple.jpg"),
                   ],
                 )
               ],

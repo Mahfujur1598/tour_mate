@@ -15,17 +15,16 @@ class _MyToursPageState extends State<MyToursPage> {
   @override
   void initState() {
     super.initState();
-    // ✅ Page load হওয়ার সাথে সাথে Firestore থেকে ডেটা লোড হবে
     authController.loadMyTours();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Tours"),
-      ),
+      appBar: AppBar(title: const Text("My Tours")),
       body: Obx(() {
+        print("MyTours list length: ${authController.myTours.length}");
+
         if (!authController.isLoggedIn) {
           return const Center(
             child: Text("Please login to see your tours"),
@@ -48,8 +47,13 @@ class _MyToursPageState extends State<MyToursPage> {
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: ListTile(
                 leading: const Icon(Icons.card_travel, color: Colors.teal),
-                title: Text(tour['name'] ?? "Unknown Tour"),
-                subtitle: Text("Booking ID: ${tour['id'] ?? '--'}"),
+                title: Text(tour['tourName'] ?? "Unknown Tour"),
+                subtitle: Text(
+                  "Booking ID: ${tour['id']}\n"
+                      "Traveler: ${tour['travelerName']}\n"
+                      "Date: ${tour['date']}\n"
+                      "Guests: ${tour['guests']}",
+                ),
                 trailing: Text(
                   "${tour['price'] ?? 0}৳",
                   style: const TextStyle(
@@ -57,6 +61,7 @@ class _MyToursPageState extends State<MyToursPage> {
                     color: Colors.deepPurple,
                   ),
                 ),
+                isThreeLine: true,
               ),
             );
           },
